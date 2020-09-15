@@ -8,7 +8,8 @@ export async function cli(argsArray) {
     if (args.help || args.h || args._.length !== 1) {
         help();
     } else {
-        convertToGltf(file)
+        const scale = parseInt(args.scale || args.s || 100);
+        convertToGltf(file, scale);
     }
 }
 
@@ -20,6 +21,10 @@ Batch convert a directory containing fbx mixamo animations to gltf
 USAGE:
     mixamo-cli ./path/to/my/dir
     
+OPTIONS:
+    -s, --scale     Divide the export scale by an integer factor. Default is 100, which will export the model at 1/100
+                    of its size.
+
 dir must be a directory containing a bunch of fbx files and one mixamo character (as a fbx file).
 dir will not be recursively traversed, just one level deep.
 `)
