@@ -5,7 +5,8 @@ import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter";
 import {ImageLoader, LoaderUtils} from 'three/build/three.module.js';
 import {Canvas, loadImage} from "canvas";
 
-const Blob = require("cross-blob");
+import {Blob, FileReader} from "../lib/vblob.js";
+
 global.Blob = Blob;
 
 const PRECISION = 6;
@@ -25,7 +26,8 @@ global.window = {
             texturesMap[path] = blob;
             return path;
         }
-    }
+    },
+    FileReader: FileReader
 };
 global.document = {
     createElement: (nodeName) => {
@@ -37,11 +39,22 @@ global.document = {
 
 // HTML Images are not available, so use a Buffer instead.
 ImageLoader.prototype.load = function (url, onLoad) {
-    pending.push(texturesMap[url].arrayBuffer()
+    pending.push(
+        readAsArrayBuffer(texturesMap[url])
         .then(data => loadImage(Buffer.from(data)))
         .then(image => onLoad(image))
     );
 };
+
+function readAsArrayBuffer(blob) {
+    return new Promise(resolve => {
+        const fileReader = new FileReader();
+        fileReader.addEventListener("load", e => {
+            resolve(e.target.result);
+        });
+        fileReader.readAsArrayBuffer(blob);
+    })
+}
 
 const file = "resource/Abe-Loco/Ch39_nonPBR.fbx";
 const resourceDirectory = LoaderUtils.extractUrlBase(file);
@@ -55,8 +68,8 @@ Promise.all(pending).then(() => {
     exporter.parse(
         object,
         (result) => {
-            console.log(result);
-            fs.writeFileSync(`mixamo-${new Date().getTime()}.gltf`, result);
+            const content = (typeof result === 'object') ? JSON.stringify(result) : result;
+            fs.writeFileSync(`mixamo-${new Date().getTime()}.gltf`, content);
         },
         {trs: true, binary: false, animations: object.animations}
     );

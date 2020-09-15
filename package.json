@@ -6,12 +6,13 @@
   "scripts": {
     "start": "node src/toto.js",
     "inspect": "node inspect src/toto.js",
-    "fbx": "node -r esm src/fbx2three.js"
+    "fbx": "node --unhandled-rejections=strict -r esm src/fbx2three.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "blob-polyfill": "^4.0.20200601",
     "canvas": "^2.6.1",
     "cross-blob": "^2.0.0",
     "esm": "^3.2.25",
