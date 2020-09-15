@@ -29,6 +29,7 @@ global.window = {
     },
     FileReader: FileReader
 };
+// noinspection JSConstantReassignment
 global.document = {
     createElement: (nodeName) => {
         if (nodeName !== 'canvas') throw new Error(`Cannot create node ${nodeName}`);
@@ -66,6 +67,7 @@ function cleanAnimations(animations, fileName) {
              }
             animation.name = cleanName;
         }
+        return animation;
     })
 }
 
@@ -82,9 +84,9 @@ for (const file of files) {
     if (isMainMesh) {
         mainMesh = mesh;
         const mainAnimations = mesh.animations.filter(anim => anim.name === "Take 001");
-        animations = [...mainAnimations, ...animations]
+        animations = [...cleanAnimations(mainAnimations), ...animations]
     } else {
-        animations = [...animations, ...mesh.animations]
+        animations = [...animations, ...cleanAnimations(mesh.animations, file)]
     }
 }
 
