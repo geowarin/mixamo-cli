@@ -25,7 +25,7 @@ OPTIONS:
     -s, --scale     Divide the export scale by an integer factor. Default is 100, which will export the model at 1/100
                     of its size.
 
-dir must be a directory containing a bunch of fbx files and one mixamo character (as a fbx file).
+dir must be a directory containing a bunch of fbx (animations) files and one mixamo character (as a fbx file).
 dir will not be recursively traversed, just one level deep.
 `)
 }
