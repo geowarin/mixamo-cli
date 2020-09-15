@@ -36,8 +36,6 @@ global.document = {
     }
 };
 
-
-// HTML Images are not available, so use a Buffer instead.
 ImageLoader.prototype.load = function (url, onLoad) {
     pending.push(
         readAsArrayBuffer(texturesMap[url])
@@ -56,21 +54,30 @@ function readAsArrayBuffer(blob) {
     })
 }
 
-const file = "resource/Abe-Loco/Ch39_nonPBR.fbx";
-const resourceDirectory = LoaderUtils.extractUrlBase(file);
+const mainFile = "resource/Abe-Loco/Ch39_nonPBR.fbx";
+const resourceDirectory = LoaderUtils.extractUrlBase(mainFile);
 const loader = new FBXLoader();
-const exporter = new GLTFExporter();
 
-const arraybuffer = fs.readFileSync(file).buffer;
-const object = loader.parse(arraybuffer, resourceDirectory);
+const mainMesh = loader.parse(fs.readFileSync(mainFile).buffer, resourceDirectory);
+
+let animations = [...mainMesh.animations];
+
+["Breathing Idle.fbx", "Running.fbx", "Walking.fbx"].forEach(animationFileName => {
+    const mesh = loader.parse(fs.readFileSync("resource/Abe-Loco/" + animationFileName).buffer, resourceDirectory);
+    animations = [...animations, ...mesh.animations.map(animation => {
+        animation.name = animationFileName;
+        return animation;
+    })];
+})
 
 Promise.all(pending).then(() => {
+    const exporter = new GLTFExporter();
     exporter.parse(
-        object,
+        mainMesh,
         (result) => {
-            const content = (typeof result === 'object') ? JSON.stringify(result) : result;
-            fs.writeFileSync(`mixamo-${new Date().getTime()}.gltf`, content);
+            const output = JSON.stringify(result, null, 2);
+            fs.writeFileSync(`mixamo-${new Date().getTime()}.gltf`, output);
         },
-        {trs: true, binary: false, animations: object.animations}
+        {trs: true, binary: false, animations: animations}
     );
 });
