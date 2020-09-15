@@ -54,21 +54,44 @@ function readAsArrayBuffer(blob) {
     })
 }
 
-const mainFile = "resource/Abe-Loco/Ch39_nonPBR.fbx";
-const resourceDirectory = LoaderUtils.extractUrlBase(mainFile);
+function cleanAnimations(animations, fileName) {
+    return animations.map((animation, index) => {
+        if (animation.name === "Take 001") {
+            animation.name = "T-Pose (No Animation)";
+        } else if (fileName != null) {
+            let cleanName = fileName.split(".")[0].replace(/\s/g, "");
+            cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+            if (animations.length > 1) {
+                cleanName += " " + index;
+             }
+            animation.name = cleanName;
+        }
+    })
+}
+
+const directory = "resource/Abe-Loco";
+const files = fs.readdirSync(directory).filter(dir => dir.endsWith(".fbx"));
+
 const loader = new FBXLoader();
+let animations = [];
+let mainMesh = null;
 
-const mainMesh = loader.parse(fs.readFileSync(mainFile).buffer, resourceDirectory);
+for (const file of files) {
+    const mesh = loader.parse(fs.readFileSync(directory + "/" + file).buffer, LoaderUtils.extractUrlBase(file));
+    const isMainMesh = mesh.children.some(c => c.type === "SkinnedMesh");
+    if (isMainMesh) {
+        mainMesh = mesh;
+        const mainAnimations = mesh.animations.filter(anim => anim.name === "Take 001");
+        animations = [...mainAnimations, ...animations]
+    } else {
+        animations = [...animations, ...mesh.animations]
+    }
+}
 
-let animations = [...mainMesh.animations];
+if (mainMesh == null)
+    throw new Error("Could not find main mesh")
 
-["Breathing Idle.fbx", "Running.fbx", "Walking.fbx"].forEach(animationFileName => {
-    const mesh = loader.parse(fs.readFileSync("resource/Abe-Loco/" + animationFileName).buffer, resourceDirectory);
-    animations = [...animations, ...mesh.animations.map(animation => {
-        animation.name = animationFileName;
-        return animation;
-    })];
-})
+mainMesh.scale.multiplyScalar(1 / 100);
 
 Promise.all(pending).then(() => {
     const exporter = new GLTFExporter();
