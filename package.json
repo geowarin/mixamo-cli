@@ -2,10 +2,7 @@
   "name": "mixamo-cli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node --unhandled-rejections=strict -r esm src/fbx2three.js"
-  },
+  "bin": "./index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,6 +10,7 @@
     "canvas": "^2.6.1",
     "esm": "^3.2.25",
     "eventtarget": "^0.1.0",
+    "minimist": "^1.2.5",
     "three": "^0.120.1",
     "tmp": "^0.2.1"
   },
