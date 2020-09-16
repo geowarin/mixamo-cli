@@ -7,6 +7,7 @@ not published. Git clone and use npm link to install as a cli on your machine.
 ## Usage
 
 ```
+<!-- replacer_start -->
 mixamo-cli 1.0.0
 Batch convert a directory containing fbx mixamo animations to gltf
 
@@ -19,4 +20,5 @@ OPTIONS:
 
 dir must be a directory containing a bunch of fbx files (animations) and one mixamo character (as a fbx file).
 dir will not be recursively traversed, just one level deep.
+<!-- replacer_end -->
 ```
