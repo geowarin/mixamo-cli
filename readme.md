@@ -7,7 +7,6 @@ not published. Git clone and use npm link to install as a cli on your machine.
 ## Usage
 
 ```
-<!-- replacer_start -->
 mixamo-cli 1.0.0
 Batch convert a directory containing fbx mixamo animations to gltf
 
@@ -15,10 +14,10 @@ USAGE:
     mixamo-cli ./path/to/my/dir
 
 OPTIONS:
-    -s, --scale     Divide the export scale by an integer factor. Default is 100, which will export the model at 1/100
-                    of its size.
+    -s, --scale         Divide the export scale by an integer factor. Default is 100, which will export the model at
+                        1/100 of its size.
+    -i, --includeMain   Include the main mesh animations (usually T-Pose and empty anim). Default is false.
 
-dir must be a directory containing a bunch of fbx files (animations) and one mixamo character (as a fbx file).
+dir must be a directory containing a bunch of fbx (animations) files and one mixamo character (as a fbx file).
 dir will not be recursively traversed, just one level deep.
-<!-- replacer_end -->
 ```
