@@ -6,24 +6,20 @@ import {LoaderUtils} from 'three/build/three.module.js';
 
 export function cleanAnimationNames(animations, fileName) {
     return animations.map((animation, index) => {
-        if (animation.name === "Take 001") {
-            animation.name = "T-Pose";
-        } else if (fileName != null) {
-            let cleanName = fileName.split(".")[0].replace(/\s/g, "");
-            cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-            if (animations.length > 1) {
-                cleanName += " " + index;
-            }
-            animation.name = cleanName;
+        let cleanName = fileName.split(".")[0].replace(/\s/g, "");
+        cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+        if (animations.length > 1) {
+            cleanName += " " + index;
         }
+        animation.name = cleanName;
         return animation;
     })
 }
 
 const loader = new FBXLoader();
 
-export function parseFbxs(directory) {
-    const files = fs.readdirSync(directory).filter(dir => dir.endsWith(".fbx"));
+export function parseFbxs(directory, {includeMainMeshAnimations}) {
+    const files = fs.readdirSync(directory).filter(file => file.endsWith(".fbx"));
 
     let animations = [];
     let mainMesh = null;
@@ -33,8 +29,9 @@ export function parseFbxs(directory) {
         const isMainMesh = mesh.children.some(c => c.type === "SkinnedMesh");
         if (isMainMesh) {
             mainMesh = mesh;
-            const mainAnimations = mesh.animations.filter(anim => anim.name === "Take 001");
-            animations = [...cleanAnimationNames(mainAnimations), ...animations]
+            if (includeMainMeshAnimations) {
+                animations = [...cleanAnimationNames(mesh.animations, file), ...animations]
+            }
         } else {
             animations = [...animations, ...cleanAnimationNames(mesh.animations, file)]
         }

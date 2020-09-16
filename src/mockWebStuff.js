@@ -10,7 +10,7 @@ function parseNumber(key, value) {
     return typeof value === 'number' ? parseFloat(value.toFixed(PRECISION)) : value;
 }
 
-export const pending = [];
+export const pendingImagesLoading = [];
 const texturesMap = {};
 global.window = {
     innerWidth: 1024,
@@ -34,7 +34,7 @@ global.document = {
 };
 
 ImageLoader.prototype.load = function (url, onLoad) {
-    pending.push(
+    pendingImagesLoading.push(
         readAsArrayBuffer(texturesMap[url])
             .then(data => loadImage(Buffer.from(data)))
             .then(image => onLoad(image))
