@@ -3,7 +3,7 @@ import {pendingImagesLoading} from "./mockWebStuff.js";
 import path from 'path';
 import {gltfExport, parseFbxs} from "./utils";
 
-export function convertToGltf(directory, {scale, includeMainMeshAnimations}) {
+export function convertToGltf(directory, {scale, includeMainMeshAnimations, outputPath}) {
     const {mainMesh, animations} = parseFbxs(directory, {includeMainMeshAnimations});
     const {name: dirName} = path.parse(directory);
 
@@ -13,7 +13,7 @@ export function convertToGltf(directory, {scale, includeMainMeshAnimations}) {
     mainMesh.scale.multiplyScalar(1 / scale);
 
     Promise.all(pendingImagesLoading).then(() => {
-        const path = `${dirName}-${new Date().getTime()}.gltf`;
+        const path = outputPath || `${dirName}.gltf`;
         gltfExport(mainMesh, animations, path);
         console.log(`Successfully exported ${path}!`)
     });
