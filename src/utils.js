@@ -45,13 +45,17 @@ export function parseFbxs(directory, {includeMainMeshAnimations}) {
 
 const exporter = new GLTFExporter();
 
-export function gltfExport(mainMesh, animations, path) {
+export function gltfExport(mainMesh, animations, path, binary) {
     exporter.parse(
         mainMesh,
         (result) => {
-            const output = JSON.stringify(result, null, 2);
-            fs.writeFileSync(path, output);
+            if ( result instanceof ArrayBuffer ) {
+                fs.writeFileSync(path, Buffer.from(result));
+            } else {
+                const output = JSON.stringify(result, null, 2);
+                fs.writeFileSync(path, output);
+            }
         },
-        {trs: true, binary: false, animations: animations}
+        {trs: true, binary, animations: animations}
     );
 }

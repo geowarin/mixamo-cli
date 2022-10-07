@@ -12,8 +12,9 @@ export async function cli(argsArray) {
         const scale = parseInt(args.scale || args.s || 100);
         const includeMainMeshAnimations = args.includeMain || args.i || false;
         const outputPath = args.output || args.o;
+        const binary = args.binary || args.b || false;
 
-        convertToGltf(file, {scale, includeMainMeshAnimations, outputPath});
+        convertToGltf(file, {scale, includeMainMeshAnimations, outputPath, binary});
     }
 }
 
