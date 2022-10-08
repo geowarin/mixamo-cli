@@ -19,7 +19,9 @@ OPTIONS:
     -i, --includeMain   Include the main mesh animations (usually T-Pose and empty anim). Default is false.
     -o, --output        Define the output path of the gltf. If omitted, the output will be generated in the current
                         directory and its name will be based on the input path.
+    -b, --binary        Convert to glb instead of gltf
 
 dir must be a directory containing a bunch of fbx (animations) files and one mixamo character (as a fbx file).
 dir will not be recursively traversed, just one level deep.
+
 ```

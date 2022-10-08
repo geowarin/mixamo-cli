@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="index.js" type="NodeJSConfigurationType" application-parameters="$USER_HOME$/Downloads/anims2/ -b" nameIsGenerated="true" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="index.js" type="NodeJSConfigurationType" application-parameters="$USER_HOME$/Downloads/anims2/ -b" path-to-js-file="index.js" working-dir="$PROJECT_DIR$">
     <method v="2" />
   </configuration>
 </component>
